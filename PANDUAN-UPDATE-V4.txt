@@ -1,0 +1,70 @@
+KOPI GENGGAM — PANDUAN UPDATE (versi dengan antrean offline, metode bayar, biaya, laba bersih, koreksi)
+
+1) WAJIB: JALANKAN SQL TERBARU
+   Supabase -> SQL Editor -> tempel SELURUH isi supabase_setup.sql -> Run.
+   Aman dijalankan ulang. Tanpa langkah ini aplikasi tetap jalan, tetapi fitur baru (metode bayar, biaya operasional,
+   permintaan koreksi) tidak aktif dan pusat akan melihat peringatan di Dashboard.
+
+2) ATURAN YANG DIJAGA OLEH DATABASE (bukan hanya aplikasi)
+   - Akun cabang hanya boleh MENAMBAH data bertanggal hari ini s/d 3 hari ke belakang.
+   - Cabang tidak bisa mengubah/menghapus data. Salah input -> tombol hapus = "Ajukan pembatalan" (butuh alasan),
+     pusat menyetujui/menolak di Dashboard. Data yang belum terkirim (masih antre offline) boleh dibatalkan sendiri.
+   - Cabang boleh input opname (hanya tambah). Ubah/hapus opname tetap oleh pusat.
+
+3) OFFLINE
+   Transaksi, belanja, setoran, opname, dan biaya yang dibuat saat tidak ada internet disimpan di HP (lencana
+   "menunggu kirim") dan dikirim otomatis saat online. Batas tanggal 3 hari tetap berlaku: data yang menunggu
+   lebih dari 3 hari akan ditolak server dan muncul sebagai "gagal" (hubungi pusat).
+   Ubah/hapus data lama, edit master, dan reset tetap butuh internet.
+
+4) KEAMANAN AKUN (lakukan di Supabase, tidak bisa lewat aplikasi)
+   - Authentication -> Sign In / Providers -> Email: MATIKAN pendaftaran akun baru ("Allow new users to sign up").
+     Akun cabang dibuat lewat tombol "+ Cabang" di aplikasi (fungsi SQL), jadi pendaftaran terbuka tidak diperlukan.
+   - Pakai password panjang & unik untuk akun pusat. Catatan: aplikasi ini BELUM mendukung MFA/TOTP.
+   - Jangan membagikan file/URL dengan kunci service_role. Kunci "anon" di aplikasi memang publik; keamanan data
+     ditentukan oleh RLS (sudah diatur di SQL).
+
+5) CADANGAN
+   Ekspor "Cadangan lengkap (.json)" minimal seminggu sekali (Dashboard pusat mengingatkan bila >7 hari).
+   Simpan file di tempat terpisah (Drive/HP lain). Cek kebijakan paket Supabase Anda soal cadangan otomatis
+   dan penjedaan proyek yang tidak aktif.
+
+6) UJI DULU DI PROYEK TERPISAH (disarankan)
+   Buat proyek Supabase kedua (staging), jalankan SQL yang sama, buat akun pusat+cabang uji, dan coba semua alur
+   sebelum karyawan memakainya. Ubah SUPABASE_URL / SUPABASE_ANON_KEY di file HTML untuk staging.
+
+7) TUTUP BUKU BULANAN (stok + keuangan)  — butuh SQL v3 (sudah ada di supabase_setup.sql)
+   Cara pakai (khusus pusat): Dashboard -> kartu "Tutup Buku Bulanan"
+     1. Pilih "Semua Cabang" di bagian atas.
+     2. Pilih tanggal AKHIR bulan yang sudah lewat (mis. 30 September) -> "Pratinjau & Tutup".
+     3. Cek ringkasan per cabang (omzet, laba bersih, saldo kas, nilai stok) lalu setujui.
+   Yang terjadi:
+     - Aplikasi menyimpan "saldo awal" tiap cabang: stok & total belanja per bahan (agar rata-rata harga/HPP tetap
+       sinambung), saldo kas, serta ringkasan keuangan bulan itu (tampil di tabel riwayat, hanya untuk pusat).
+     - Data pada/sebelum tanggal itu TIDAK dihapus dari Supabase, tetapi tidak dimuat lagi -> aplikasi tetap ringan.
+     - "Semua data" di aplikasi berarti sejak tanggal tutup buku. Rentang tanggal yang melewati tanggal itu hanya
+       menghitung data sesudahnya.
+     - Data pada/sebelum tanggal itu dikunci oleh database (tidak bisa ditambah/diubah/dihapus, juga oleh pusat).
+     - Keliru? Tombol "Buka kembali tutup buku terakhir" memuat ulang data itu dan mengembalikan saldo awal kas.
+   Saran: SEBELUM tutup buku, ekspor "Cadangan lengkap (.json)". File cadangan hanya berisi data yang sedang dimuat,
+   jadi cadangan data lama bergantung pada database Supabase Anda (jangan hapus baris lama).
+   Tutup buku ditolak bila masih ada data menunggu kirim (antrean offline) atau bulan belum selesai.
+
+8) TAMPILAN CABANG
+   - Laba kotor, laba bersih, selisih opname (nilai Rp), dan HPP tidak ditampilkan di akun cabang.
+   - Pada tampilan satu cabang (akun cabang, atau pusat yang memilih satu cabang), bahan dengan stok 0 yang belum
+     pernah dibeli/dihitung disembunyikan dari tabel Stok, Peringatan Stok, dan pilihan Opname. Ada tautan
+     "Tampilkan" untuk melihat semuanya. Pilihan barang di form Belanja tetap lengkap agar pembelian pertama bisa dicatat.
+     Mode "Semua Cabang" selalu menampilkan semua bahan.
+
+9) HARGA/TOTAL BELANJA & BIAYA YANG DIBAYAR PUSAT — DISEMBUNYIKAN DI CABANG
+   Di akun cabang, baris belanja dan biaya dengan asal "Pusat" hanya menampilkan jumlah/jenisnya; harga, total, dan
+   nilainya tampil "—". Total Biaya Operasional di Dashboard cabang juga hanya menghitung biaya asal Cabang, dan
+   ekspor Excel/JSON dari akun cabang tidak memuat total belanja asal Pusat.
+   PENTING (keterbatasan): ini penyembunyian di TAMPILAN. Datanya masih dikirim server ke HP cabang, jadi orang
+   yang paham alat pengembang browser masih bisa melihatnya (juga ringkasan laba di data tutup buku). Untuk
+   penyembunyian yang tidak bisa ditembus, biaya pusat harus disimpan di tabel khusus yang tidak bisa dibaca cabang
+   (perubahan database). Itu belum dikerjakan karena SQL-nya harus diuji di proyek uji dulu.
+
+BELUM DIKERJAKAN
+   - Memecah kode jadi beberapa file / proyek terstruktur.

@@ -1,0 +1,17 @@
+KOPI GENGGAM - PAKET INSTALASI HP (PWA)
+
+CARA TERCEPAT (tanpa coding, gratis):
+1. Buka https://app.netlify.com/drop di laptop/HP, lalu seret FOLDER ini (hasil ekstrak zip) ke halamannya.
+2. Netlify memberi alamat https://nama-acak.netlify.app  -> itu alamat aplikasi Anda.
+3. Di HP pusat & tiap cabang: buka alamat itu di Chrome -> menu titik tiga -> "Instal aplikasi" / "Tambahkan ke layar utama".
+   Ikon Kopi Genggam muncul di layar utama dan terbuka layar penuh seperti aplikasi.
+
+JADI FILE APK SUNGGUHAN (opsional):
+1. Buka https://www.pwabuilder.com, tempel alamat dari langkah 2.
+2. Pilih "Package for stores" -> Android -> unduh. Di dalamnya ada file .apk yang bisa dibagikan lewat WhatsApp/Drive
+   (HP harus mengizinkan "instal dari sumber tidak dikenal").
+
+CATATAN
+- Untuk memperbarui aplikasi: unggah ulang folder ini ke Netlify (Deploys -> drag & drop lagi). HP otomatis dapat versi baru.
+- Aplikasi ini ONLINE: data selalu ke Supabase, tidak disimpan offline.
+- Tambahkan alamat Netlify Anda di Supabase: Authentication -> URL Configuration -> Site URL, supaya login berjalan normal.
