@@ -9,7 +9,7 @@
     <script>
 /* KGChart — penggambar grafik bawaan (tanpa pustaka luar). Kompatibel dengan sebagian API Chart.js yang dipakai aplikasi. */
 (function(){
-  const FONT='"Plus Jakarta Sans",system-ui,-apple-system,Roboto,Arial,sans-serif';
+  const FONT='system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif';
   const ink=()=>{try{return chartInk();}catch(e){return {text:'#1f3d33',muted:'#3f5f52',grid:'rgba(0,80,52,.16)',dark:false};}};
   const isNum=v=>typeof v==='number'&&isFinite(v);
   const trunc=(s,n)=>{s=String(s==null?'':s);return s.length>n?s.slice(0,n-1)+'…':s;};
@@ -178,8 +178,7 @@
     <link rel="apple-touch-icon" href="icons/icon-192.png">
     <link rel="manifest" href="manifest.webmanifest">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
-        body { font-family:'Plus Jakarta Sans',sans-serif;-webkit-tap-highlight-color:transparent; }
+        body { -webkit-tap-highlight-color:transparent; }
         ::-webkit-scrollbar{width:3px;height:3px}::-webkit-scrollbar-track{background:#f1f1f1}
         ::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:3px}
     </style>
@@ -618,6 +617,30 @@ td,th{border-color:rgba(255,255,255,.55)!important;}
 #login-screen h1{color:#3b2412!important;text-shadow:0 1px 0 rgba(255,255,255,.6);}
 #login-screen .text-stone-400,#login-screen .text-stone-500{color:#5d4332!important;}
 #login-screen input{background:rgba(255,255,255,.38)!important;border:1px solid rgba(255,255,255,.8)!important;color:#2a1a10!important;}
+
+/* ===== Premium mobile polish ===== */
+@media (max-width: 640px) {
+  html, body { min-height: 100dvh; }
+  body { letter-spacing: -0.01em; }
+  button, [role="button"], a[href] {
+    min-height: 44px !important;
+    border-radius: 12px !important;
+  }
+  .text-2xl, .text-3xl, .text-4xl { letter-spacing: -0.04em; }
+  .px-3, .px-4, .px-5 { padding-left: 0.75rem !important; padding-right: 0.75rem !important; }
+  .py-3, .py-4 { padding-top: 0.7rem !important; padding-bottom: 0.7rem !important; }
+  #toast { left: 12px !important; right: 12px !important; bottom: 18px !important; }
+  #login-screen .login-card { padding: 1.1rem !important; }
+  #login-screen .login-card input, #login-screen .login-card button { min-height: 48px; }
+  [id$="-modal"] > div, #diag-modal > div {
+    border-radius: 1.1rem !important;
+    margin: 0.75rem !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
 #login-screen input::placeholder{color:#7a6657!important;}
 #login-screen input:focus{background:rgba(255,255,255,.62)!important;border-color:#f59e0b!important;color:#2a1a10!important;}
 #login-screen .login-glass-btn{background:rgba(255,255,255,.35)!important;border:1px solid rgba(255,255,255,.8)!important;color:#4a2c14!important;}
@@ -1087,6 +1110,262 @@ html[data-theme="dark"] main table tbody tr:hover:not([class^="bg-"]):not([class
 body.role-cabang #opname-analysis #oa-tiles,body.role-cabang #opname-analysis .oa-seg,
 body.role-cabang #opname-analysis table th:nth-child(5),body.role-cabang #opname-analysis table td:nth-child(5){display:none!important;}
 </style>
+<style id="kg-pos-minimal">
+:root {
+  --pos-bg: #f3f6f4;
+  --pos-surface: #fff;
+  --pos-surface-muted: #f7f9f8;
+  --pos-border: #dfe7e2;
+  --pos-text: #18352a;
+  --pos-muted: #53685e;
+  --pos-brand: #08734f;
+  --pos-brand-strong: #075b40;
+}
+html[data-theme="dark"] {
+  --pos-bg: #0d1813;
+  --pos-surface: #14231c;
+  --pos-surface-muted: #192a22;
+  --pos-border: #2a3b32;
+  --pos-text: #e6f0eb;
+  --pos-muted: #b3c4bb;
+  --pos-brand: #08734f;
+  --pos-brand-strong: #075b40;
+}
+
+html, body {
+  background: var(--pos-bg) !important;
+  background-image: none !important;
+  color: var(--pos-text) !important;
+}
+body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif !important; }
+main { background: transparent !important; }
+
+#session-bar, .period-master-bar {
+  background: #123d2e !important;
+  border-color: #245440 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html[data-theme="dark"] #session-bar,
+html[data-theme="dark"] .period-master-bar { background: #10271d !important; }
+#session-bar .sb-title img { border-radius: 10px !important; }
+#session-bar .sb-title h1 { letter-spacing: -0.02em; }
+
+#tab-dashboard .bg-white, #tab-pos .bg-white, #tab-harga .bg-white,
+#tab-resep .bg-white, #tab-belanja .bg-white, #tab-stok .bg-white,
+#tab-opname .bg-white, #tab-setoran .bg-white, main .period-tab-strip,
+#stok-mgmt-panel > div:not(.grid), #dash-stock-alerts > div {
+  background: var(--pos-surface) !important;
+  border: 1px solid var(--pos-border) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 1px 3px rgba(19, 49, 35, 0.06) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+#tab-dashboard .bg-white .bg-white, #tab-dashboard .bg-white .bg-stone-50,
+#tab-pos .bg-white .bg-white, #tab-pos .bg-white .bg-stone-50,
+#tab-harga .bg-white .bg-white, #tab-resep .bg-white .bg-white,
+#tab-belanja .bg-white .bg-white, #tab-stok .bg-white .bg-white,
+#tab-opname .bg-white .bg-white, #tab-setoran .bg-white .bg-white {
+  background: var(--pos-surface-muted) !important;
+  border-color: var(--pos-border) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+main .bg-stone-50, main .bg-stone-100:not(body),
+[id$="-modal"] > div {
+  background: var(--pos-surface-muted) !important;
+  border-color: var(--pos-border) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html[data-theme="dark"] main .bg-stone-50,
+html[data-theme="dark"] main .bg-stone-100:not(body),
+html[data-theme="dark"] [id$="-modal"] > div {
+  background: var(--pos-surface-muted) !important;
+}
+
+#tab-dashboard .grid.grid-cols-2 > .bg-white {
+  min-height: 78px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+#tab-dashboard .grid.grid-cols-2 > .bg-white h3 {
+  color: var(--pos-text) !important;
+  font-size: 17px !important;
+  letter-spacing: -0.03em;
+}
+#tab-dashboard #dash-saldo-cabang,
+#tab-dashboard #dash-setoran,
+#tab-dashboard #dash-aset-stok { color: var(--pos-brand-strong) !important; }
+
+#pos-menu-grid > div {
+  background: var(--pos-surface) !important;
+  border: 1px solid var(--pos-border) !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+#cart-total { color: var(--pos-brand-strong) !important; font-size: 18px !important; }
+#tab-pos button[onclick="checkout()"] {
+  min-height: 48px !important;
+  background: var(--pos-brand) !important;
+  border: 0 !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  font-size: 13px !important;
+}
+#tab-pos button[onclick="checkout()"]:hover { background: var(--pos-brand-strong) !important; }
+#login-screen #btn-supabase-login {
+  background: var(--pos-brand) !important;
+  color: #fff !important;
+}
+
+button.bg-amber-600, button.bg-amber-700, button.bg-emerald-600,
+.bg-amber-600:not([data-period]), .bg-amber-700, .bg-emerald-600,
+.kg-ic-accent, .scope-btn, .master-banner .mb-btn:not(.mb-ghost) {
+  background: var(--pos-brand) !important;
+  border: 1px solid var(--pos-brand) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+button.bg-amber-600:hover, button.bg-amber-700:hover,
+button.bg-emerald-600:hover, #session-bar .kg-ic-accent:hover {
+  background: var(--pos-brand-strong) !important;
+}
+.bg-amber-50, .bg-amber-50\/50, .bg-amber-100 {
+  background: #fff8e8 !important;
+  border-color: #f1ddb1 !important;
+}
+.bg-rose-50 { background: #fff1f1 !important; border-color: #f3d1d1 !important; }
+.bg-emerald-50 { background: #edf8f1 !important; border-color: #d2e9d9 !important; }
+html[data-theme="dark"] .bg-amber-50,
+html[data-theme="dark"] .bg-amber-50\/50,
+html[data-theme="dark"] .bg-amber-100 {
+  background: #332b1b !important; border-color: #51452a !important;
+}
+html[data-theme="dark"] .bg-rose-50 { background: #351f21 !important; border-color: #523034 !important; }
+html[data-theme="dark"] .bg-emerald-50 { background: #183126 !important; border-color: #294a38 !important; }
+.period-tab-strip[data-tab] > div:first-child > div,
+.period-master-bar > div:first-child > div:last-child {
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+.period-tab-strip[data-tab] > div:first-child > div {
+  background: var(--pos-surface-muted) !important;
+  border-color: var(--pos-border) !important;
+}
+.period-master-bar > div:first-child > div:last-child {
+  background: rgba(255,255,255,.10) !important;
+  border-color: rgba(255,255,255,.18) !important;
+}
+[data-period].bg-amber-600 {
+  background: var(--pos-brand) !important;
+  border-color: var(--pos-brand) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+select, textarea {
+  min-height: 42px;
+  background: var(--pos-surface) !important;
+  color: var(--pos-text) !important;
+  border: 1px solid var(--pos-border) !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+input:not([type="checkbox"]):focus, select:focus, textarea:focus {
+  border-color: var(--pos-brand) !important;
+  box-shadow: 0 0 0 3px rgba(8, 115, 79, 0.14) !important;
+}
+html[data-theme="dark"] input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+html[data-theme="dark"] select, html[data-theme="dark"] textarea {
+  background: #101d17 !important;
+  border-color: var(--pos-border) !important;
+  color: var(--pos-text) !important;
+}
+
+main table thead tr { background: var(--pos-surface-muted) !important; }
+main table tbody tr:nth-child(odd):not([class^="bg-"]):not([class*=" bg-"]),
+main table tbody tr:nth-child(even):not([class^="bg-"]):not([class*=" bg-"]) {
+  background: var(--pos-surface) !important;
+}
+main table tbody tr:hover:not([class^="bg-"]):not([class*=" bg-"]) {
+  background: var(--pos-surface-muted) !important;
+}
+main td, main th, main .border-stone-100, main .border-stone-200 {
+  border-color: var(--pos-border) !important;
+}
+
+#login-screen {
+  background: var(--pos-bg) !important;
+  background-image: none !important;
+}
+#login-screen .login-card {
+  background: var(--pos-surface) !important;
+  border: 1px solid var(--pos-border) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 24px rgba(19, 49, 35, 0.08) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+#login-screen h1 { color: var(--pos-text) !important; text-shadow: none !important; }
+#login-screen input {
+  background: var(--pos-surface-muted) !important;
+  color: var(--pos-text) !important;
+  border-color: var(--pos-border) !important;
+}
+#login-screen .login-glass-btn {
+  background: var(--pos-surface-muted) !important;
+  color: var(--pos-text) !important;
+  border: 1px solid var(--pos-border) !important;
+  box-shadow: none !important;
+}
+html[data-theme="dark"] #login-screen .login-card { background: var(--pos-surface) !important; }
+
+nav.bg-stone-900, nav[class*="bg-stone-900"] {
+  padding-bottom: max(8px, env(safe-area-inset-bottom)) !important;
+  background: var(--pos-surface) !important;
+  border-top: 1px solid var(--pos-border) !important;
+  box-shadow: 0 -2px 8px rgba(19, 49, 35, 0.04) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+nav a, nav a[class*="text-stone"] {
+  color: var(--pos-muted) !important;
+  border-radius: 10px !important;
+  transition: color 120ms ease, background-color 120ms ease;
+}
+nav a.text-amber-500 {
+  color: var(--pos-brand-strong) !important;
+  background: rgba(8, 115, 79, 0.08) !important;
+}
+html[data-theme="dark"] nav a.text-amber-500 { background: rgba(57, 185, 130, 0.14) !important; }
+nav a.text-amber-500 i { filter: none !important; }
+
+.rounded-2xl { border-radius: 14px !important; }
+.rounded-3xl { border-radius: 16px !important; }
+button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible {
+  outline: 2px solid var(--pos-brand) !important;
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; }
+}
+</style>
 </head>
 
 <body class="bg-stone-100 text-stone-900 antialiased flex flex-col h-screen overflow-hidden">
@@ -1260,7 +1539,21 @@ body.role-cabang #opname-analysis table th:nth-child(5),body.role-cabang #opname
         <div class="flex justify-between text-xs font-bold pt-1"><span>Total Pembayaran:</span><span id="cart-total" class="text-amber-600 text-sm">Rp 0</span></div>
         <button onclick="checkout()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2.5 rounded-xl text-xs shadow-sm">Simpan Transaksi</button></div>
     </div>
-    <div class="bg-white p-3.5 rounded-2xl shadow-xs border border-stone-200 space-y-3"><h3 class="font-bold text-xs">Riwayat Transaksi</h3><div class="overflow-x-auto"><table class="w-full text-left text-[11px]"><thead><tr class="border-b border-stone-200 text-stone-400 uppercase"><th class="py-2 px-2">Tgl/Menu</th><th class="py-2 px-2">Qty/Tot</th><th class="py-2 px-2 text-center">Aksi</th></tr></thead><tbody id="transactions-table-body" class="divide-y divide-stone-100"></tbody></table></div></div>
+    <div id="trx-history-card" class="bg-white p-3.5 rounded-2xl shadow-xs border border-stone-200 space-y-3">
+      <div class="flex items-center justify-between gap-2"><h3 class="font-bold text-xs">Riwayat Transaksi</h3><span id="trx-history-count" class="text-[10px] text-stone-500"></span></div>
+      <div class="grid grid-cols-2 gap-2">
+        <label class="space-y-1 text-[10px] font-semibold text-stone-500">Tanggal
+          <input type="date" id="trx-history-date" aria-label="Filter riwayat berdasarkan tanggal" onchange="renderTransactions()" class="w-full bg-white border border-stone-200 rounded-lg px-2 py-2 text-xs">
+        </label>
+        <label class="space-y-1 text-[10px] font-semibold text-stone-500">Kasir
+          <select id="trx-history-cashier" aria-label="Filter riwayat berdasarkan kasir" onchange="renderTransactions()" class="w-full bg-white border border-stone-200 rounded-lg px-2 py-2 text-xs">
+            <option value="">Semua kasir</option>
+          </select>
+        </label>
+      </div>
+      <button type="button" onclick="clearTransactionsFilter()" class="w-full rounded-lg border border-stone-200 bg-stone-50 px-3 py-2 text-xs font-semibold text-stone-600">Hapus filter</button>
+      <div class="overflow-x-auto"><table class="w-full text-left text-[11px]"><thead><tr class="border-b border-stone-200 text-stone-400 uppercase"><th class="py-2 px-2">Tgl/Menu</th><th class="py-2 px-2">Qty/Tot</th><th class="py-2 px-2 text-center">Aksi</th></tr></thead><tbody id="transactions-table-body" class="divide-y divide-stone-100"></tbody></table></div>
+    </div>
 </section>
 
 <section id="tab-harga" class="hidden space-y-3.5">
@@ -1420,7 +1713,16 @@ document.write(navItems.map(x=>`<a href="#" onclick="switchTab('${x[0]}');return
 <button onclick="closeBahanModal()" class="flex-1 bg-stone-100 py-2 rounded text-xs">Tutup</button>
 <button id="modal-bahan-save-btn" onclick="saveBahanModal()" class="flex-1 bg-amber-600 text-white py-2 rounded text-xs font-semibold">Tambah</button>
 </div></div></div></div>
-<div id="trx-modal" class="fixed inset-0 bg-stone-900/60 hidden items-center justify-center z-50 p-4"><div class="bg-white rounded-2xl max-w-xs w-full p-4 space-y-3"><h3 class="font-bold text-xs">Edit Riwayat Transaksi</h3><input type="date" id="modal-trx-date" class="w-full bg-stone-50 border rounded px-2 py-1.5 text-xs"><select id="modal-trx-name" class="w-full bg-stone-50 border rounded px-2 py-1.5 text-xs"></select><input type="number" id="modal-trx-qty" min="1" class="w-full bg-stone-50 border rounded px-2 py-1.5 text-xs"><div class="flex space-x-2"><button onclick="closeTrxModal()" class="flex-1 bg-stone-100 py-2 rounded text-xs">Batal</button><button onclick="saveTrxEdit()" class="flex-1 bg-amber-600 text-white py-2 rounded text-xs font-semibold">Simpan</button></div></div></div>
+<div id="trx-modal" class="fixed inset-0 bg-stone-900/60 hidden items-center justify-center z-50 p-4"><div class="bg-white rounded-2xl max-w-xs w-full p-4 space-y-3" role="dialog" aria-modal="true" aria-labelledby="modal-trx-title">
+  <h3 id="modal-trx-title" class="font-bold text-xs">Edit Riwayat Transaksi</h3>
+  <label class="block space-y-1 text-[10px] font-semibold text-stone-500">Tanggal<input type="date" id="modal-trx-date" class="w-full bg-stone-50 border rounded px-2 py-2 text-xs"></label>
+  <label class="block space-y-1 text-[10px] font-semibold text-stone-500">Menu<select id="modal-trx-name" class="w-full bg-stone-50 border rounded px-2 py-2 text-xs"></select></label>
+  <label class="block space-y-1 text-[10px] font-semibold text-stone-500">Jumlah<input type="number" id="modal-trx-qty" min="1" step="1" class="w-full bg-stone-50 border rounded px-2 py-2 text-xs"></label>
+  <label class="block space-y-1 text-[10px] font-semibold text-stone-500">Metode pembayaran<select id="modal-trx-pay" class="w-full bg-stone-50 border rounded px-2 py-2 text-xs"><option value="Tunai">Tunai</option><option value="QRIS">QRIS</option><option value="Transfer">Transfer</option></select></label>
+  <label class="block space-y-1 text-[10px] font-semibold text-stone-500">Nama kasir<input type="text" id="modal-trx-cashier" maxlength="30" placeholder="Nama kasir" class="w-full bg-stone-50 border rounded px-2 py-2 text-xs"></label>
+  <p id="modal-trx-pay-note" class="hidden text-[10px] text-stone-500">Edit kasir dan metode pembayaran tersedia setelah database memakai SQL terbaru.</p>
+  <div class="flex space-x-2"><button onclick="closeTrxModal()" class="flex-1 bg-stone-100 py-2 rounded text-xs">Batal</button><button onclick="saveTrxEdit()" class="flex-1 bg-amber-600 text-white py-2 rounded text-xs font-semibold">Simpan</button></div>
+</div></div>
 <div id="branch-modal" class="fixed inset-0 bg-stone-900/60 hidden items-center justify-center z-50 p-4"><div class="bg-white rounded-2xl max-w-xs w-full p-4 space-y-2.5">
 <h3 class="font-bold text-xs">Tambah Cabang Baru</h3>
 <input type="text" id="bm-name" placeholder="Nama cabang" class="w-full bg-stone-50 border rounded px-2 py-1.5 text-xs">
@@ -2389,14 +2691,69 @@ function checkout(){
 }
 function renderTransactions(){
     const b=document.getElementById('transactions-table-body');
-    const rows=[...transaksiData.keys()].filter(i=>inPeriod(transaksiData[i].date,'pos')).reverse();
-    if(!rows.length){b.innerHTML='<tr><td colspan="3" class="text-center py-4 text-stone-400">Tidak ada transaksi di periode ini</td></tr>';return}
+    const dateFilter=document.getElementById('trx-history-date');
+    const cashierFilter=document.getElementById('trx-history-cashier');
+    const selectedCashier=cashierFilter?cashierFilter.value:'';
+    const cashiers=[...new Set(transaksiData.map(t=>String(t.cashier||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'id'));
+    if(cashierFilter){
+        cashierFilter.innerHTML='<option value="">Semua kasir</option>'
+          +(cashiers.length?cashiers.map(c=>'<option value="'+esc(c)+'">'+esc(c)+'</option>').join(''):'')
+          +(transaksiData.some(t=>!String(t.cashier||'').trim())?'<option value="__blank__">Belum diisi</option>':'');
+        if([...cashierFilter.options].some(o=>o.value===selectedCashier))cashierFilter.value=selectedCashier;
+    }
+    const date=dateFilter?dateFilter.value:'';
+    const cashier=cashierFilter?cashierFilter.value:'';
+    const rows=[...transaksiData.keys()].filter(i=>{
+        const t=transaksiData[i];
+        return inPeriod(t.date,'pos')
+          &&(!date||dateKey(t.date)===date)
+          &&(!cashier||(cashier==='__blank__'?!String(t.cashier||'').trim():String(t.cashier||'').trim()===cashier));
+    }).reverse();
+    const count=document.getElementById('trx-history-count');
+    if(count)count.textContent=rows.length+' transaksi';
+    if(!rows.length){b.innerHTML='<tr><td colspan="3" class="text-center py-4 text-stone-500">Tidak ada transaksi yang cocok dengan filter.</td></tr>';return}
     b.innerHTML=rows.map(i=>{const t=transaksiData[i];const br=t._branchName?`<span class="text-[9px] bg-stone-100 text-stone-500 px-1 rounded ml-1">${esc(t._branchName)}</span>`:'';return `<tr><td class="py-2 px-2"><p class="font-semibold">${esc(t.name)}${br}</p><p class="text-[10px] text-stone-400">${t.date}${t.pay&&t.pay!=='Tunai'?' · '+esc(t.pay):''}${t.cashier?' · '+esc(t.cashier):''}</p></td><td class="py-2 px-2"><p>${t.qty} Pcs</p><p class="font-bold">${money(t.total)}</p></td><td class="py-2 px-2 text-center"><button onclick="editTransaction(${i})" class="text-amber-600 p-1"><i class="fa-solid fa-pen-to-square"></i></button><button onclick="deleteTransaction(${i})" class="text-rose-600 p-1"><i class="fa-solid fa-trash"></i></button></td></tr>`}).join('');
 }
+function clearTransactionsFilter(){
+    const date=document.getElementById('trx-history-date'),cashier=document.getElementById('trx-history-cashier');
+    if(date)date.value='';
+    if(cashier)cashier.value='';
+    renderTransactions();
+}
 function editTransaction(i){
-    if(cabangNeedApproval("ubah transaksi"))return;editingTrxIndex=i;const t=transaksiData[i];document.getElementById('modal-trx-date').value=t.date;document.getElementById('modal-trx-qty').value=t.qty;document.getElementById('modal-trx-name').innerHTML=menuHarga.map(m=>`<option ${m.name===t.name?'selected':''}>${esc(m.name)}</option>`).join('');document.getElementById('trx-modal').classList.remove('hidden');document.getElementById('trx-modal').classList.add('flex')}
+    if(cabangNeedApproval("ubah transaksi"))return;
+    const t=transaksiData[i];if(!t)return;
+    editingTrxIndex=i;
+    document.getElementById('modal-trx-date').value=t.date||'';
+    document.getElementById('modal-trx-qty').value=t.qty;
+    document.getElementById('modal-trx-name').innerHTML=menuHarga.map(m=>`<option value="${esc(m.name)}">${esc(m.name)}</option>`).join('');
+    document.getElementById('modal-trx-name').value=t.name;
+    const pay=document.getElementById('modal-trx-pay'),cashier=document.getElementById('modal-trx-cashier');
+    const schemaReady=typeof KG!=='undefined'&&KG.schema&&KG.schema.pay;
+    const method=String(t.pay||'Tunai');
+    if(![...pay.options].some(o=>o.value===method))pay.insertAdjacentHTML('beforeend','<option value="'+esc(method)+'">'+esc(method)+'</option>');
+    pay.value=method;cashier.value=t.cashier||'';
+    pay.disabled=!schemaReady;cashier.disabled=!schemaReady;
+    document.getElementById('modal-trx-pay-note').classList.toggle('hidden',!!schemaReady);
+    document.getElementById('trx-modal').classList.remove('hidden');document.getElementById('trx-modal').classList.add('flex');
+}
 function closeTrxModal(){editingTrxIndex=null;document.getElementById('trx-modal').classList.add('hidden');document.getElementById('trx-modal').classList.remove('flex')}
-function saveTrxEdit(){if(editingTrxIndex===null)return;const date=document.getElementById('modal-trx-date').value,name=document.getElementById('modal-trx-name').value,qty=parseInt(document.getElementById('modal-trx-qty').value),m=menuHarga.find(x=>x.name===name);if(!date||qty<=0||!m)return showToast('Data transaksi tidak valid!');transaksiData[editingTrxIndex]={...transaksiData[editingTrxIndex],date,name,qty,total:num(m.price)*qty};closeTrxModal();renderTransactions();updateDashboard();updateCharts();saveToLocalStorage();showToast('Transaksi diperbarui!')}
+function saveTrxEdit(){
+    if(editingTrxIndex===null)return;
+    const date=document.getElementById('modal-trx-date').value;
+    const name=document.getElementById('modal-trx-name').value;
+    const qty=parseInt(document.getElementById('modal-trx-qty').value,10);
+    const pay=document.getElementById('modal-trx-pay').value;
+    const cashier=document.getElementById('modal-trx-cashier').value.trim();
+    const m=menuHarga.find(x=>x.name===name);
+    if(!date||!Number.isInteger(qty)||qty<=0||!m)return showToast('Data transaksi tidak valid!');
+    const t=transaksiData[editingTrxIndex];
+    if(!t)return showToast('Transaksi tidak ditemukan. Muat ulang riwayat lalu coba lagi.');
+    const schemaReady=typeof KG!=='undefined'&&KG.schema&&KG.schema.pay;
+    transaksiData[editingTrxIndex]={...t,date,name,qty,total:num(m.price)*qty,
+      ...(schemaReady?{pay:pay||'Tunai',cashier}: {})};
+    closeTrxModal();renderTransactions();updateDashboard();updateCharts();saveToLocalStorage();showToast('Transaksi diperbarui!');
+}
 function deleteTransaction(i){
     if(cabangNeedApproval("hapus transaksi"))return;if(confirm('Hapus transaksi ini?')){transaksiData.splice(i,1);renderTransactions();updateDashboard();updateCharts();saveToLocalStorage();showToast('Transaksi dihapus.')}}
 
@@ -5294,6 +5651,6 @@ const _rs5=renderStok;
 renderStok=function(){const r=_rs5.apply(this,arguments);try{kgRenderHiddenNote();}catch(e){}return r;};
 
 </script>
-<script>if('serviceWorker' in navigator&&location.protocol==='https:'){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}</script>
+<script>if('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) { window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {})); }</script>
 </body>
 </html>
