@@ -1087,6 +1087,14 @@ html[data-theme="dark"] main table tbody tr:hover:not([class^="bg-"]):not([class
 body.role-cabang #opname-analysis #oa-tiles,body.role-cabang #opname-analysis .oa-seg,
 body.role-cabang #opname-analysis table th:nth-child(5),body.role-cabang #opname-analysis table td:nth-child(5){display:none!important;}
 </style>
+<style id="kg-v6">
+.trx-filter{margin:6px 0 4px;padding:8px;border-radius:14px;background:var(--g-card-soft);border:1px solid var(--g-line);}
+.trx-f-row{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-end;}
+.trx-f-row label{flex:1 1 28%;min-width:96px;font-size:10px;color:var(--tx2);display:flex;flex-direction:column;gap:2px;}
+.trx-f-row input,.trx-f-row select{width:100%;padding:5px 6px!important;font-size:11px!important;}
+.trx-f-row button{flex:0 0 auto;margin-left:auto;padding:6px 10px;border-radius:10px;font-size:10.5px;font-weight:700;color:var(--tx);background:var(--g-card);border:1px solid var(--g-line);}
+.trx-f-sum{margin:6px 2px 0;font-size:10.5px;color:var(--tx2);line-height:1.4;}
+</style>
 </head>
 
 <body class="bg-stone-100 text-stone-900 antialiased flex flex-col h-screen overflow-hidden">
@@ -2389,7 +2397,7 @@ function checkout(){
 }
 function renderTransactions(){
     const b=document.getElementById('transactions-table-body');
-    const rows=[...transaksiData.keys()].filter(i=>inPeriod(transaksiData[i].date,'pos')).reverse();
+    const rows=[...transaksiData.keys()].filter(i=>(typeof kgTrxPass==='function'?kgTrxPass(transaksiData[i]):inPeriod(transaksiData[i].date,'pos'))).reverse();
     if(!rows.length){b.innerHTML='<tr><td colspan="3" class="text-center py-4 text-stone-400">Tidak ada transaksi di periode ini</td></tr>';return}
     b.innerHTML=rows.map(i=>{const t=transaksiData[i];const br=t._branchName?`<span class="text-[9px] bg-stone-100 text-stone-500 px-1 rounded ml-1">${esc(t._branchName)}</span>`:'';return `<tr><td class="py-2 px-2"><p class="font-semibold">${esc(t.name)}${br}</p><p class="text-[10px] text-stone-400">${t.date}${t.pay&&t.pay!=='Tunai'?' · '+esc(t.pay):''}${t.cashier?' · '+esc(t.cashier):''}</p></td><td class="py-2 px-2"><p>${t.qty} Pcs</p><p class="font-bold">${money(t.total)}</p></td><td class="py-2 px-2 text-center"><button onclick="editTransaction(${i})" class="text-amber-600 p-1"><i class="fa-solid fa-pen-to-square"></i></button><button onclick="deleteTransaction(${i})" class="text-rose-600 p-1"><i class="fa-solid fa-trash"></i></button></td></tr>`}).join('');
 }
@@ -5292,6 +5300,91 @@ function kgRenderHiddenNote(){
 }
 const _rs5=renderStok;
 renderStok=function(){const r=_rs5.apply(this,arguments);try{kgRenderHiddenNote();}catch(e){}return r;};
+
+</script>
+<script>
+/* ===== KG v6 — Kasir: filter riwayat (tanggal, kasir, metode bayar) + edit kasir & metode bayar ===== */
+KG.trxF={date:'',cashier:'',pay:''};
+function kgTrxPass(t){
+  const f=KG.trxF||{};
+  if(f.date){if(dateKey(t.date)!==f.date)return false;}else if(!inPeriod(t.date,'pos'))return false;
+  if(f.cashier&&((t.cashier||'(tanpa nama)')!==f.cashier))return false;
+  if(f.pay&&((t.pay||'Tunai')!==f.pay))return false;
+  return true;
+}
+function kgSetTrxFilter(k,v){KG.trxF[k]=v||'';renderTransactions();}
+function kgResetTrxFilter(){KG.trxF={date:'',cashier:'',pay:''};renderTransactions();}
+function kgRenderTrxFilter(){
+  const body=document.getElementById('transactions-table-body');if(!body)return;
+  const card=body.closest('.bg-white');if(!card)return;
+  let bar=document.getElementById('trx-filter');
+  if(!bar){
+    bar=document.createElement('div');bar.id='trx-filter';bar.className='trx-filter';
+    bar.innerHTML='<div class="trx-f-row"><label>Tanggal<input type="date" id="trx-f-date" onchange="kgSetTrxFilter(\'date\',this.value)"></label>'
+      +'<label>Kasir<select id="trx-f-cashier" onchange="kgSetTrxFilter(\'cashier\',this.value)"></select></label>'
+      +'<label>Bayar<select id="trx-f-pay" onchange="kgSetTrxFilter(\'pay\',this.value)"><option value="">Semua</option><option>Tunai</option><option>QRIS</option><option>Transfer</option></select></label>'
+      +'<button type="button" onclick="kgResetTrxFilter()">Reset</button></div><p id="trx-f-sum" class="trx-f-sum"></p>';
+    const h3=card.querySelector('h3');if(h3)h3.after(bar);else card.insertBefore(bar,card.firstChild);
+  }
+  // pilihan kasir dari data yang sedang dimuat
+  const names=[...new Set(transaksiData.map(t=>t.cashier||'(tanpa nama)'))].sort((a,b)=>a.localeCompare(b,'id'));
+  const sel=document.getElementById('trx-f-cashier');
+  if(KG.trxF.cashier&&!names.includes(KG.trxF.cashier))names.push(KG.trxF.cashier);
+  sel.innerHTML='<option value="">Semua kasir</option>'+names.map(n=>'<option value="'+esc(n)+'">'+esc(n)+'</option>').join('');
+  sel.value=KG.trxF.cashier;
+  const d=document.getElementById('trx-f-date');if(document.activeElement!==d)d.value=KG.trxF.date;
+  document.getElementById('trx-f-pay').value=KG.trxF.pay;
+  const pr=document.getElementById('trx-f-pay');if(pr)pr.style.display=KG.schema.pay?'':'none';
+  const rows=transaksiData.filter(kgTrxPass);
+  let tot=0,cash=0,non=0;rows.forEach(t=>{const v=num(t.total);tot+=v;if((t.pay||'Tunai')==='Tunai')cash+=v;else non+=v;});
+  const on=KG.trxF.date||KG.trxF.cashier||KG.trxF.pay;
+  document.getElementById('trx-f-sum').innerHTML=rows.length?('<b>'+rows.length+'</b> baris · Total <b>'+money(tot)+'</b>'+(KG.schema.pay?' · Tunai '+money(cash)+' · Non-tunai '+money(non):'')+(KG.trxF.date?' · <i>tanggal dipilih menggantikan periode</i>':'')):(on?'Tidak ada transaksi yang cocok dengan filter.':'');
+}
+const _rt6=renderTransactions;
+renderTransactions=function(){const r=_rt6.apply(this,arguments);try{kgRenderTrxFilter();}catch(e){console.warn('filter riwayat',e);}return r;};
+
+/* ---------- edit transaksi: kasir & metode bayar ---------- */
+function kgTrxModalFields(){
+  if(document.getElementById('modal-trx-pay'))return;
+  const q=document.getElementById('modal-trx-qty');if(!q)return;
+  const box=document.createElement('div');box.id='modal-trx-extra';box.className='space-y-2';
+  box.innerHTML='<label class="block text-[10px] text-stone-500">Pembayaran<select id="modal-trx-pay" class="w-full bg-stone-50 border rounded px-2 py-1.5 text-xs mt-0.5"><option>Tunai</option><option>QRIS</option><option>Transfer</option></select></label>'
+    +'<label class="block text-[10px] text-stone-500">Kasir<input type="text" id="modal-trx-cashier" maxlength="30" placeholder="Nama kasir" class="w-full bg-stone-50 border rounded px-2 py-1.5 text-xs mt-0.5"></label>';
+  q.after(box);
+}
+(function(){
+  const oe=window.editTransaction;
+  window.editTransaction=function(i){
+    const r=oe.apply(this,arguments);
+    if(editingTrxIndex===null)return r;                                   // ditolak (mis. akun cabang)
+    kgTrxModalFields();
+    const t=transaksiData[i]||{};
+    document.getElementById('modal-trx-pay').value=t.pay||'Tunai';
+    document.getElementById('modal-trx-cashier').value=t.cashier||'';
+    document.getElementById('modal-trx-extra').style.display=KG.schema.pay?'':'none';
+    return r;
+  };
+  const os=window.saveTrxEdit;
+  window.saveTrxEdit=function(){
+    const idx=editingTrxIndex;if(idx===null||!transaksiData[idx])return os.apply(this,arguments);
+    const old=Object.assign({},transaksiData[idx]);
+    const payEl=document.getElementById('modal-trx-pay'),kEl=document.getElementById('modal-trx-cashier');
+    const pay=payEl?payEl.value:(old.pay||'Tunai'),cashier=kEl?kEl.value.trim():(old.cashier||'');
+    const r=os.apply(this,arguments);
+    if(editingTrxIndex===null&&transaksiData[idx]){                        // berhasil disimpan
+      const t=transaksiData[idx];
+      // harga: tanggal & menu tidak berubah -> pertahankan harga satuan lama; berubah -> harga menu pada tanggal baru
+      let total;
+      if(old.name===t.name&&dateKey(old.date)===dateKey(t.date))total=(num(old.total)/Math.max(1,num(old.qty)))*num(t.qty);
+      else{const hp=getMenuPriceAsOf(t.name,dateKey(t.date));total=(hp!=null&&isFinite(hp)?num(hp):num(t.total)/Math.max(1,num(t.qty)))*num(t.qty);}
+      t.total=Math.round(total);
+      if(KG.schema.pay)t.pay=pay||'Tunai';
+      t.cashier=cashier;
+      try{renderTransactions();updateDashboard();updateCharts();saveGlobalsIntoActiveBranch();saveToLocalStorage();}catch(e){}
+    }
+    return r;
+  };
+})();
 
 </script>
 <script>if('serviceWorker' in navigator&&location.protocol==='https:'){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}</script>

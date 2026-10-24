@@ -1,5 +1,5 @@
 /* Kopi Genggam - service worker: hanya cangkang aplikasi. Data (Supabase) TIDAK pernah di-cache. */
-const V = 'kg-shell-3.19.0';
+const V = 'kg-shell-3.20.0';
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/maskable-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(V).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
